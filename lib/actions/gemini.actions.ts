@@ -58,3 +58,37 @@ export async function generateExperienceDescription(experienceInfo: string) {
 
   return JSON.parse(result);
 }
+
+export async function analyzeresume(resumeText: string) {
+  const prompt = `Analyze the following resume for ATS optimization. Provide a JSON response including:
+  - 'ats_score': A percentage rating of how well the resume matches ATS criteria.
+  - 'missing_skills': A list of key skills that are missing based on common industry standards.
+  - 'improvement_tips': A short paragraph suggesting how the resume can be improved for better ATS compatibility.
+
+  Return only a valid JSON object with these keys and no extra text.
+
+  Resume Content:
+  ${resumeText}`;
+
+  try {
+    const result = await askGemini(prompt);
+    console.log("Raw AI Response:", result); // Debugging Log
+
+    // Ensure the response is valid JSON
+    const parsedResult = JSON.parse(result);
+    
+    // Validate JSON structure
+    if (!parsedResult.ats_score || !parsedResult.missing_skills || !parsedResult.improvement_tips) {
+      throw new Error("Incomplete JSON response from AI.");
+    }
+
+    return parsedResult;
+  } catch (error) {
+    console.error("Error parsing AI response:", error);
+    return { 
+      ats_score: "N/A", 
+      missing_skills: [], 
+      improvement_tips: "Could not generate suggestions. Try refining the resume." 
+    };
+  }
+}
