@@ -92,3 +92,4 @@ export async function analyzeresume(resumeText: string) {
     };
   }
 }
+
