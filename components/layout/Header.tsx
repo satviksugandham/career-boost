@@ -32,6 +32,9 @@ const Header = () => {
                 <DropdownMenuItem>
                   <Link href="/growth-tools/resumeanalysis">Resume Analysis</Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/growth-tools/jobtracker">Job Tracker</Link>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 

@@ -1,28 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
-import { analyzeresume } from "@/lib/actions/gemini.actions"
-
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const formData = await req.formData();
-    const file = formData.get("file") as File;
+    console.log("Received form data:", formData);
 
-    if (!file) {
-      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
-    }
+    // Process the uploaded file and job description here
+    // Let's assume the analysis function returns some JSON data
+    const analysisResult = {
+      ats_score: 85,
+      missing_skills: ["Python", "SQL"],
+      improvements: "Consider adding more leadership experience."
+    };
 
-    // Read the file content as text (assuming it's a .txt, .docx, or .pdf)
-    const text = await file.text(); // Works for text-based files
-    // For .docx or .pdf, you need a parser like `pdf-parse` or `mammoth`
-
-    // Call the AI-powered resume analysis function
-    const analysisResult = await analyzeresume(text);
-
-    return NextResponse.json(analysisResult);
-  } catch (error: any) {
-    console.error("Resume analysis failed:", error);
-    return NextResponse.json(
-      { error: "Failed to analyze resume" },
-      { status: 500 }
-    );
+    console.log("Analysis result:", analysisResult);
+    return new Response(JSON.stringify(analysisResult), { status: 200 });
+  } catch (error) {
+    console.error("Job analysis failed:", error);
+    return new Response(JSON.stringify({ error: "Failed to analyze resume" }), { status: 500 });
   }
 }
